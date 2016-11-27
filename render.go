@@ -53,9 +53,19 @@ func (p Pongo2Render) Instance(name string, data interface{}) render.Render {
 		template = pongo2.Must(pongo2.FromCache(filename))
 	}
 
+	context := make(pongo2.Context, 0)
+
+	for k, v := range p.Context {
+		context[k] = v
+	}
+
+	for k, v := range data.(pongo2.Context) {
+		context[k] = v
+	}
+
 	return Pongo2Render{
 		Template: template,
-		Context:  data.(pongo2.Context),
+		Context:  context,
 		Options:  p.Options,
 	}
 }
