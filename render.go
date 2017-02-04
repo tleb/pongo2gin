@@ -16,6 +16,7 @@ import (
 type RenderOptions struct {
 	TemplateDir string
 	ContentType string
+	NameSuffix  string
 }
 
 // Pongo2Render is a custom Gin template renderer using Pongo2.
@@ -37,6 +38,7 @@ func Default() *Pongo2Render {
 	return New(RenderOptions{
 		TemplateDir: "templates",
 		ContentType: "text/html; charset=utf-8",
+		NameSuffix:  "",
 	})
 }
 
@@ -44,7 +46,7 @@ func Default() *Pongo2Render {
 // the template by either loading it from disk or using pongo2's cache.
 func (p Pongo2Render) Instance(name string, data interface{}) render.Render {
 	var template *pongo2.Template
-	filename := path.Join(p.Options.TemplateDir, name)
+	filename := path.Join(p.Options.TemplateDir, name) + p.Options.NameSuffix
 
 	// always read template files from disk if in debug mode, use cache otherwise.
 	if gin.Mode() == "debug" {
